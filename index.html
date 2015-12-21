@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Books</title>
+		<link type="text/css" href="dist/components/fontawesome/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="dist/css/main.min.css">
+	</head>
+	<body ng:app="booksApp">
+
+		<div ng-view></div>
+
+		<script src="dist/js/main.js"></script>
+		<script type="text/ng-template" id="index.html">
+			<div class="index">
+				<div class="container">
+					<div class="search">
+						Find me the best
+						<select ng-model="search.genre.category">
+							<option ng-repeat="genre in genres" value="{{genre}}">
+								{{genre}}
+							</option>
+						</select>
+						books about
+						<select ng-model="search.genre.name">
+							<option ng-repeat="topic in topics" value="{{topic}}">
+								{{topic}}
+							</option>
+						</select>
+						<input type="text" ng-model="search.$" placeholder="Search books">
+					</div>
+
+					<div class="books">
+						<div class="book" ng-repeat="book in books | filter:search:strict">
+							<img src="{{book.cover}}">
+							<h3><a href="#ShowBook/{{book.id}}">{{book.name}}</a></h3>
+							<div class="author">by {{book.author.name}}</div>
+							<div class="footer">
+								<span class="likes"><i class="fa fa-heart"></i> {{book.likes}}</span>
+								<span class="published" am-time-ago="book.published"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</script>
+		<script type="text/ng-template" id="book.html">
+			<div class="book-show">
+				<section class="bg-gray">
+					<div class="container">
+						<a href="#/">Back</a>
+						<h1>{{book.name}}</h1>
+						by {{book.author.name}}
+						<div class="description">
+							{{book.description}}
+						</div>
+						Categories:
+						{{book.genre.category}}, {{book.genre.name}}
+					</div>
+				</section>
+				<section>
+					<div class="container">
+						<h2>Introduction</h2>
+						<p ng-repeat="paragraph in book.introduction">
+							{{paragraph.content}}
+						</p>
+					</div>
+					<div class="author">
+						<img src="{{book.author.avatar}}">
+						Written by {{book.author.name}}
+					</div>
+				</section>
+				<section class="bg-gray">
+					<div class="container">
+						<h3>Similar reading</h3>
+					</div>
+				</section>
+			</div>
+		</script>
+	</body>
+</html>
