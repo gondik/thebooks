@@ -36,6 +36,13 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		copy: {
+			main: {
+				files: [
+					{expand: true, src: ['src/components/fontawesome/fonts/*'], dest: 'dist/fonts/', flatten: true, filter: 'isFile'},
+				],
+			},
+		},
 		watch: {
 			// for stylesheets, watch css and less files
 			// only run less and cssmin
@@ -61,14 +68,16 @@ module.exports = function(grunt) {
 		'jshint',
 		'browserify',
 		'less',
-		'cssmin'
+		'cssmin',
+		'copy'
 	]);
 
 	grunt.registerTask('build', [
 		'jshint',
 		'browserify',
 		'less',
-		'cssmin'
+		'cssmin',
+		'copy'
 	]);
 
 	grunt.registerTask('default', [
