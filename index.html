@@ -10,7 +10,6 @@
 
 		<div ng-view></div>
 
-		<script src="dist/js/main.js"></script>
 		<script type="text/ng-template" id="index.html">
 			<div class="index">
 				<div class="container">
@@ -30,32 +29,28 @@
 						<input type="text" ng-model="search.$" placeholder="Search books">
 					</div>
 
-					<div class="books">
-						<div class="book" ng-repeat="book in books | filter:search:strict">
-							<img src="{{book.cover}}">
-							<h3><a href="#ShowBook/{{book.id}}">{{book.name}}</a></h3>
-							<div class="author">by {{book.author.name}}</div>
-							<div class="footer">
-								<span class="likes"><i class="fa fa-heart"></i> {{book.likes}}</span>
-								<span class="published" am-time-ago="book.published"></span>
-							</div>
-						</div>
+					<div class="book-list">
+						<div class="item" dir-paginate="book in books | filter:search:strict | itemsPerPage: 9" ng-include="'book-item.html'"></div>
 					</div>
+
+					<dir-pagination-controls></dir-pagination-controls>
 				</div>
 			</div>
 		</script>
 		<script type="text/ng-template" id="book.html">
 			<div class="book-show">
+				<a href="#/" class="back-to-index"><i class="fa fa-chevron-left"></i> Back to all books</a>
 				<section class="bg-gray">
 					<div class="container">
-						<a href="#/">Back</a>
 						<h1>{{book.name}}</h1>
 						by {{book.author.name}}
 						<div class="description">
 							{{book.description}}
 						</div>
 						Categories:
-						{{book.genre.category}}, {{book.genre.name}}
+						<div class="categories">
+							<span class="category">{{book.genre.category}}</span>, <span class="category">{{book.genre.name}}</span>
+						</div>
 					</div>
 				</section>
 				<section>
@@ -66,16 +61,35 @@
 						</p>
 					</div>
 					<div class="author">
-						<img src="{{book.author.avatar}}">
-						Written by {{book.author.name}}
+						<div class="inner">
+							<img src="{{book.author.avatar}}">
+							Written by <strong>{{book.author.name}}</strong>
+						</div>
 					</div>
 				</section>
 				<section class="bg-gray">
 					<div class="container">
 						<h3>Similar reading</h3>
+
+						<div class="book-list">
+							<div class="item" ng-repeat="book in books | filter: { genre: { name: book.genre.name }} | limitTo: 3" ng-include="'book-item.html'"></div>
+						</div>
 					</div>
 				</section>
 			</div>
 		</script>
+		<script type="text/ng-template" id="book-item.html">
+			<a href="#ShowBook/{{book.id}}">
+				<img src="{{book.cover}}">
+				<h2>{{book.name}}</h2>
+				<div class="author">by {{book.author.name}}</div>
+				<div class="footer">
+					<span class="likes"><i class="fa fa-heart-o"></i> {{book.likes}}</span>
+					<span class="published" am-time-ago="book.published"></span>
+				</div>
+			</a>
+		</script>
+
+		<script src="dist/js/main.js"></script>
 	</body>
 </html>

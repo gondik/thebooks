@@ -1,11 +1,10 @@
 var books = require('./../../book.json');
 var angular = require('angular');
 var moment = require('angular-moment');
+var arp = require('angular-utils-pagination');
 require('angular-router-browserify')(angular);
 
-console.log(books[0]);
-
-var app = angular.module('booksApp', ['angularMoment', 'ngRoute']);
+var app = angular.module('booksApp', ['angularMoment', 'ngRoute', 'angularUtils.directives.dirPagination']);
 
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
@@ -22,8 +21,15 @@ app.config(['$routeProvider', function($routeProvider) {
 		});
 }]);
 
-app.controller('IndexCtrl', function($scope) {
+app.run(function($rootScope, $window) {
+	$rootScope.$on('$routeChangeSuccess', function () {
+		if (document.readyState == 'complete') {
+			$window.scrollTo(0, 0);
+		}
+	});
+});
 
+app.controller('IndexCtrl', function($scope) {
 	$scope.genres = [];
 	$scope.topics = [];
 
@@ -41,4 +47,5 @@ app.controller('IndexCtrl', function($scope) {
 
 app.controller('BookCtrl', function($scope, $filter, $routeParams) {
 	$scope.book = $filter('filter')(books, {id:$routeParams.bookId}, true)[0];
+	$scope.books = books;
 });
